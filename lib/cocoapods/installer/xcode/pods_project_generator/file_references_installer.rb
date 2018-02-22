@@ -58,6 +58,7 @@ module Pod
           # @return [void]
           #
           def refresh_file_accessors
+            Sandbox::PathList.clear_file_system_cache
             file_accessors.each do |fa|
               fa.path_list.read_file_system
             end

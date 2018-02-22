@@ -8,15 +8,20 @@ module Pod
     # paths and matches the globs patterns against them, resulting in just one
     # access to the file system.
     #
+    # It also holds a class level file system cache, guaranteeing just one 
+    # file system access for each root path, even if multiplt PathLict objects # have the same root.
+    #
     # @note   A PathList once it has generated the list of the paths this is
     #         updated only if explicitly requested by calling
-    #         {#read_file_system}
+    #         {#PathList.clear_file_system_cache}
     #
     class PathList
       # @return [Pathname] The root of the list whose files and directories
       #         are used to perform the matching operations.
       #
       attr_accessor :root
+
+      @@file_system_cache = {}
 
       # Initialize a new instance
       #
@@ -44,12 +49,27 @@ module Pod
         @dirs
       end
 
+      # @return [void] Clears class level file system cache.
+      def self.clear_file_system_cache
+        @@file_system_cache = {}
+      end
+
       # @return [void] Reads the file system and populates the files and paths
       #         lists.
       #
       def read_file_system
         unless root.exist?
           raise Informative, "Attempt to read non existent folder `#{root}`."
+        end
+
+        # Get from class level cache if available
+        cache_key = root
+        cached_value = @@file_system_cache[cache_key]
+        if cached_value
+          @dirs = cached_value[:dirs]
+          @files = cached_value[:files]
+          @glob_cache = {}
+          return
         end
 
         dirs = []
@@ -69,6 +89,12 @@ module Pod
         @dirs = dirs
         @files = files
         @glob_cache = {}
+
+        # Add to cache
+        cached_value = {}
+        cached_value[:dirs] = @dirs
+        cached_value[:files] = @files
+        @@file_system_cache[cache_key] = cached_value
       end
 
       #-----------------------------------------------------------------------#

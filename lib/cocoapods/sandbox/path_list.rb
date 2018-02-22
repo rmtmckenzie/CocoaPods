@@ -129,18 +129,20 @@ module Pod
           full_list = files
         end
 
-        list = Array(patterns).map do |pattern|
+        exact_matches = (full_list.to_set & Array(patterns).to_set).to_a
+        patterns -= exact_matches
+        all_patterns = Array(patterns).map do |pattern|
           if directory?(pattern) && dir_pattern
             pattern += '/' unless pattern.end_with?('/')
             pattern += dir_pattern
           end
-          expanded_patterns = dir_glob_equivalent_patterns(pattern)
-          full_list.select do |path|
-            expanded_patterns.any? do |p|
-              File.fnmatch(p, path, File::FNM_CASEFOLD | File::FNM_PATHNAME)
-            end
-          end
+          dir_glob_equivalent_patterns(pattern)
         end.flatten
+        list = exact_matches + full_list.select do |path|
+          all_patterns.any? do |p|
+            File.fnmatch(p, path, File::FNM_CASEFOLD | File::FNM_PATHNAME)
+          end
+        end
 
         list = list.map { |path| Pathname.new(path) }
         if exclude_patterns

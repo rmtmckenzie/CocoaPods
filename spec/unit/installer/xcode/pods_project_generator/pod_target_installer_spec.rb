@@ -412,21 +412,25 @@ module Pod
               end
 
               it 'raises when source file reference is not found' do
-                File.symlink(@first_source_file, @source_symlink_file)
+                file_path = @first_source_file.dirname + "notthere-#{@first_source_file.basename}"
+                File.symlink(file_path, @source_symlink_file)
                 path_list = Sandbox::PathList.new(fixture('banana-lib'))
                 file_accessor = Sandbox::FileAccessor.new(path_list, @spec.consumer(:ios))
                 @pod_target.file_accessors = [file_accessor]
-                exception = lambda { @installer.install! }.should.raise Informative
-                exception.message.should.include "Unable to find source ref for #{@source_symlink_file} for target BananaLib."
+                exception = lambda { @installer.install! }.should.raise Errno::ENOENT
+                exception.message.should.include 'No such file or directory'
+                exception.message.should.include file_path.to_s
               end
 
               it 'raises when header file reference is not found' do
-                File.symlink(@first_header_file, @header_symlink_file)
+                file_path = @first_header_file.dirname + "notthere-#{@first_header_file.basename}"
+                File.symlink(file_path, @header_symlink_file)
                 path_list = Sandbox::PathList.new(fixture('banana-lib'))
                 file_accessor = Sandbox::FileAccessor.new(path_list, @spec.consumer(:ios))
                 @pod_target.file_accessors = [file_accessor]
-                exception = lambda { @installer.install! }.should.raise Informative
-                exception.message.should.include "Unable to find header ref for #{@header_symlink_file} for target BananaLib."
+                exception = lambda { @installer.install! }.should.raise Errno::ENOENT
+                exception.message.should.include 'No such file or directory'
+                exception.message.should.include file_path.to_s
               end
 
               it 'does not raise when header file reference is found' do

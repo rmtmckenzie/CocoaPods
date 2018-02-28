@@ -4,6 +4,95 @@ To install or update CocoaPods see this [guide](http://docs.cocoapods.org/guides
 
 To install release candidates run `[sudo] gem install cocoapods --pre`
 
+## Master
+
+##### Enhancements
+
+* Add support for modular header search paths, include "legacy" support.  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#7412](https://github.com/CocoaPods/CocoaPods/pull/7412)
+
+* Set direct and transitive dependency header search paths for pod targets  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#7116](https://github.com/CocoaPods/CocoaPods/pull/7116)
+
+* Log target names missing host for libraries  
+  [Keith Smiley](https://github.com/keith)
+  [#7346](https://github.com/CocoaPods/CocoaPods/pull/7346)
+
+* Add a `--no-overwrite` flag to `pod repo push` to disable overwriting
+  existing specs that have already been pushed.  
+  [Samuel Giddins](https://github.com/segiddins)
+
+* Store which specs repo a pod comes from in the lockfile.  
+  [Samuel Giddins](https://github.com/segiddins)
+
+* Add `set -u` to the copy frameworks and copy resources scripts.  
+  [Keith Smiley](https://github.com/keith)
+  [#7180](https://github.com/CocoaPods/CocoaPods/pull/7180)
+
+* Allow integrating into static library targets without attempting to copy 
+  resources or embed frameworks unless `UNLOCALIZED_RESOURCES_FOLDER_PATH` 
+  or `FRAMEWORKS_FOLDER_PATH` is set.  
+  [Samuel Giddins](https://github.com/segiddins)
+
+* Change color scheme of `pod outdated` from red-yellow-green to red-blue-green to be more colorblind friendly  
+  [iv-mexx](https://github.com/iv-mexx)  
+  [#7372](https://github.com/CocoaPods/CocoaPods/issues/7372)  
+
+* Add support for integrating swift pods as static libraries.  
+  [Danielle Tomlinson](https://github.com/dantoml)
+  [Samuel Giddins](https://github.com/segiddins)
+  [#6899](https://github.com/CocoaPods/CocoaPods/issues/6899)
+
+##### Bug Fixes
+
+* Clear input/output paths if they exceed an arbitrary limit  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#7362](https://github.com/CocoaPods/CocoaPods/issues/7362)
+
+* Warn instead of throwing an exception when a development pod specifies an invalid license file path  
+  [Eric Amorde](https://github.com/amorde)
+  [#7377](https://github.com/CocoaPods/CocoaPods/issues/7377)
+
+* Better static frameworks transitive dependency error checking  
+  [Paul Beusterien](https://github.com/paulb777)
+  [#7352](https://github.com/CocoaPods/CocoaPods/issues/7352)
+
+* Always update input/output paths even if they are empty  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#7368](https://github.com/CocoaPods/CocoaPods/pull/7368)
+
+* Unique all available pre-release versions when displaying  
+  [Samuel Giddins](https://github.com/segiddins)
+  [#7353](https://github.com/CocoaPods/CocoaPods/pull/7353)
+
+* Do not attempt compilation for pods with no sources and skipping import validation  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#7336](https://github.com/CocoaPods/CocoaPods/issues/7336)
+
+* Avoid adding copy resources and frameworks script phases when those phases
+  would not copy anything.  
+  [Keith Smiley](https://github.com/keith)
+  [Samuel Giddins](https://github.com/segiddins)
+
+* Speed up `pod install` times by up to 50% for very large project.  
+  [Samuel Giddins](https://github.com/segiddins)
+
+* Avoid dependency resolution conflicts when a pod depends upon a local pod.  
+  [Samuel Giddins](https://github.com/segiddins)
+
+* Fix legacy header search paths that broke due to #7116 and #7412.  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#7445](https://github.com/CocoaPods/CocoaPods/pull/7445)
+
+* Stop adding header search paths that do not contain any headers.  
+  [Samuel Giddins](https://github.com/segiddins)
+
+* Fix returning absolute paths from glob, fixes issue with static framework and public headers.
+  [Morgan McKenzie](https://github.com/rmtmckenzie)
+  [#7463](https://github.com/CocoaPods/CocoaPods/issues/7463)
+
 ## 1.4.0 (2018-01-18)
 
 ##### Enhancements
